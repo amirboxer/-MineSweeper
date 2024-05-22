@@ -1,0 +1,32 @@
+body {
+    text-align: center;
+  }
+
+:root {
+    --cellSize: 50px;
+    --borederColor: rgb(0, 0, 0)
+  }
+  
+
+table {
+    margin: auto;
+    border-spacing: 0px;
+    border: 10px solid var(--borederColor);
+    border-collapse: collapse;
+
+  }  
+
+td {
+    box-sizing: border-box;
+    height: var(--cellSize);
+    width: var(--cellSize);
+    border: 3px solid var(--borederColor);
+    font-size: 30px;
+    cursor: pointer;
+  }
+
+.clock {
+  background-color: blueviolet;
+  font-size: 50px;
+  z-index: 10;
+}
