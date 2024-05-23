@@ -8,10 +8,12 @@ function onInit(){
         shownCount: 0,
         markedCount: 0,
         secsPassed: 0,
+        life: 3,
         startTime: null,
-        timeInterval: null,    // TODO clear interval whem stops 
+        timeInterval: null,   
         clock: document.querySelector('.clock'),
-        markMinesSign: document.querySelector('.minesOnBoard')
+        markMinesSign: document.querySelector('.minesOnBoard'),
+        lifeSign: document.querySelector('.hearts')
        }
     gGame.clock.innerText = ''
     updateMinesOnBoardSign()
@@ -20,25 +22,47 @@ function onInit(){
 
 function tellTime (){
     var endDate   = new Date()
-    gGame.clock.innerText = Math.floor((endDate.getTime() - gGame.startTime.getTime()) / 1000)
+    var time = Math.floor((endDate.getTime() - gGame.startTime.getTime()) / 1000)
+    gGame.clock.innerText = time
+    return time
 }
 
 function updateMinesOnBoardSign() {
-    gGame.markMinesSign.innerText  = gGame.level.numOfMines - gGame.markedCount
+    if (!gGame.isOn)  gGame.markMinesSign.innerText = ''
+    else gGame.markMinesSign.innerText  = gGame.level.numOfMines - gGame.markedCount
 }  
 
 function winning() {
-    if (gGame.shownCount === Math.pow(gGame.level.size, 2) - gGame.level.numOfMines) {
+    if (gGame.shownCount === Math.pow(gGame.level.size, 2) - gGame.level.numOfMines &&
+        gGame.markedCount === gGame.level.numOfMines) {
         // player won
         var score = tellTime()
-        console.log(score)
         stopClock()
-        gGame.isOn = falses
+        gGame.isOn = false
+        console.log(score)
+        return score
     }
 }
 
+function fundebug() {
+    console.log("gGame.shownCount = " + gGame.shownCount)
+    console.log("gGame.markedCount = " + gGame.markedCount)
+}
+
+function updateLifeSign() {
+    if (gGame.life) {
+        gGame.lifeSign.innerText = gGame.life
+    }
+    else gGame.lifeSign.innerText = ''
+}
+
 function loosing() {
+    gGame.markedCount++
+    gGame.life--
+    updateLifeSign()
+    if (gGame.life  > 0) return
     stopClock()
+    openAll()
     gGame.isOn = false
 }
 
@@ -48,10 +72,10 @@ function stopClock() {
 
 function OnRestart()
     {
-        if (gGame.timeInterval) clearInterval(gGame.timeInterval)
+        console.log("restert")
+        if (gGame.timeInterval) stopClock()
         onInit()
     }
-
 
 
 function levelChoice(){
@@ -61,3 +85,4 @@ function levelChoice(){
             return selections[i].value
         }
 }
+

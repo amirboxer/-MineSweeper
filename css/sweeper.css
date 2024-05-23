@@ -1,32 +1,227 @@
-body {
-    text-align: center;
-  }
+@import url(https://fonts.googleapis.com/css?family=Raleway:300);
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+.board-container {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  margin-top: 130px;
+}
 
 :root {
-    --cellSize: 50px;
-    --borederColor: rgb(0, 0, 0)
+  --backgroundColor: rgb(0, 0, 0);
+  --buttonColor: #37373778;
+  --cellSize: 50px;
+  --colorGap: 10px;
+  --buttonBorderRadius: 5px;
+}
+
+html,body{
+  display: grid;
+  background: var(--backgroundColor);
+  font-family: "Raleway", Arial, Helvetica, sans-serif;
+}
+
+table{
+  margin: auto;
+  border: 10px solid var(--buttonColor);
+  border-collapse: collapse;
+}
+
+.center{
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.outer{
+  position: relative;
+  background: var(--backgroundColor);
+}
+
+.button{    /*  changes the back*/
+  height: var(--cellSize);
+  width: var(--cellSize);
+  border-radius: var(--buttonBorderRadius);
+}
+
+.outer button, .outer span{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.outer button{  /* changes inside button*/
+  background: var(--buttonColor);
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  color: #f2f2f2;
+  outline: none;
+  border: none;
+  font-size: 30px;
+  z-index: 10;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.button button{   /* top of button */
+  height: calc(var(--cellSize) - var(--colorGap));
+  width: calc(var(--cellSize) - var(--colorGap));
+  border-radius: var(--buttonBorderRadius);
+}
+
+.outer span{
+  height: 100%;
+  width: 100%;
+  background: inherit;
+}
+
+.button span{
+  border-radius: var(--buttonBorderRadius);
+}
+
+.outer:hover span:nth-child(1){
+  filter: blur(7px);
+}
+
+.outer:hover span:nth-child(2){
+  filter: blur(40px);
+}
+
+
+.outer:hover{
+  z-index: 20;
+  background: linear-gradient(to right top, #14ffe9, #ffeb3b, #ff00e0);
+  animation: rotate 1.5s linear infinite;
+}
+@keyframes rotate {
+  0%{
+    filter: hue-rotate(0deg);
   }
-  
-
-table {
-    margin: auto;
-    border-spacing: 0px;
-    border: 10px solid var(--borederColor);
-    border-collapse: collapse;
-
-  }  
-
-td {
-    box-sizing: border-box;
-    height: var(--cellSize);
-    width: var(--cellSize);
-    border: 3px solid var(--borederColor);
-    font-size: 30px;
-    cursor: pointer;
+  100%{
+    filter: hue-rotate(360deg);
   }
+}
+@media (max-width: 640px){
+  .center{
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+  .outer{
+    margin: 50px 0;
+  }
+}
+
+.bomb {
+  height: calc(var(--cellSize) - 10px);
+}
+
+
+.flag {
+  margin-top: 10px;
+  width: calc(var(--cellSize) - 22px);
+
+}
+
+.outerShown{
+  z-index: 20;
+  background: linear-gradient(#35ba00, #207000, #35ba00);
+}
+
+.outerShown:hover {
+  z-index: 20;
+  background: linear-gradient(#35ba00, #207000, #35ba00);
+  animation: none;
+}
+
+.outerShownBobm {
+  z-index: 20;
+  background: red;
+}
+
+.outerShownBobm:hover {
+  z-index: 20;
+  background: red;
+  animation: none;
+}
+
+
+.restartSection {margin-top: 800px;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.levelChoise, .restart{
+  background: var(--buttonColor);
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  color: #f2f2f2;
+  font-size: 30px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: center;
+  bottom:10px;
+}
+
+.restart {
+  margin: auto;
+  margin-bottom: 30px;
+  padding: 10px;
+  font-size: 40px;
+  background-clip: content-box;
+  border: 10px solid var(--buttonColor);
+  bottom: 20px;
+  width: 300px;
+
+}
+
+.smiley {
+  width: 35px
+}
+
+.topLine {
+  text-align:center;
+  margin-top: 40px;
+  color: #ffffff;
+  font-size: 40px;
+  background: var(--buttonColor);
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+
+}
+
+.life, .hearts {
+  color: #850101;
+  margin-left: 50px;
+  display: inline;
+  float:left;
+}
 
 .clock {
-  background-color: blueviolet;
-  font-size: 50px;
-  z-index: 10;
+  margin-right: 50px;
+  display: inline;
+  float:none;
+}
+
+
+.minesOnBoardSign, .minesOnBoard{
+  margin-right: 30px;
+  display: inline;
+  float:right;
+  margin-right: 30px;
 }

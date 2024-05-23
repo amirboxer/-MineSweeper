@@ -3,30 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mine sweeper</title>
+    <link rel="icon" type="image/x-icon" href="imgs/fav.png">
+    <title>mineSweeper</title>
     <link rel="stylesheet" href="css/sweeper.css">
 </head>
 <body onload="onInit()">
+    <div class="restartSection">
+        <div class="restart" onclick="OnRestart()">
+            <img class="smiley" src="imgs/smiley.png" alt="😊"></img> restart
+            <img class="smiley" src="imgs/smiley.png" alt="😊"></img>
+        </div >
+        <div class="levelChoise">
+            <input type="radio" name="drone" value="Beginner" onclick="levelChoice()"/>
+            <label for="huey">Beginner</label>
+            <input type="radio" name="drone" value="Medium" onclick="levelChoice()" />
+            <label for="dewey">Medium</label>
+            <input type="radio" name="drone" value="Expert" onclick="levelChoice()" checked/>
+            <label for="louie">Expert</label>
+        </div>    
+        
+    </div>
+    <div class="topLine">
+        <div class="life">Life</div>
+        <div class="hearts" onclick="fundebug()">3</div>
+        <div class="clock"></div>
+        <div >:mines left</div>
+        <div class="minesOnBoard">mines left</div>
+
+    </div>
     <div class="board-container">
         <table>
             <tbody>
             </tbody>
         </table>
     </div>
-    <div class="minesOnBoard">mines left</div>
-    <div class="clock"></div>
-    <div onclick="OnRestart()">restart</div>
 
-
-
-    <div class="levelChoise">
-        <input type="radio" name="drone" value="Beginner" onclick="levelChoice()"/>
-        <label for="huey">Beginner</label>
-        <input type="radio" name="drone" value="Medium" onclick="levelChoice()"  checked/>
-        <label for="dewey">Medium</label>
-        <input type="radio" name="drone" value="Expert" onclick="levelChoice()"/>
-        <label for="louie">Expert</label>
-    </div>    
 
     <script src="js/board.js"></script>
     <script src="js/utils.js"></script>

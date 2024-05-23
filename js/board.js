@@ -100,8 +100,13 @@ function rederBoard(size) {
     table.innerHTML = ''
     for (var i = 0; i < size; ++i) {
         var row = '<tr>'
-        for (var j = 0; j < size; ++j)                 // todo set function after firtst click
-            row += `<td id="${getIdStr(i,j)}" onclick="onFirstClick(id)" oncontextmenu="onRightClick(event, this)"></td>`
+        for (var j = 0; j < size; ++j)                 
+            row += `<td><div class="center">
+                    <div class="outer button">
+                    <button id="${getIdStr(i,j)}" onclick="onFirstClick(id)" oncontextmenu="onRightClick(event, this)"></button>
+                    <span></span>
+                    <span></span>
+                    </div>`
         row += '</tr>'
         table.innerHTML += row
     }
@@ -119,14 +124,16 @@ function idToNums(id) {
 function onFirstClick(id) {
     gGame.isOn = true
     gGame.startTime = new Date()
-    gGame.timeInterval = setInterval(tellTime, 1000)     
+    gGame.timeInterval = setInterval(tellTime, 1000)   
+      
+    updateMinesOnBoardSign()
     var firstClicklocation = idToNums(id)
     var NoMinesBlock = getNeighbors(firstClicklocation, gGame.level.size)
     NoMinesBlock.push(firstClicklocation)
     createBoard(gGame.level, NoMinesBlock)
     replaceOnClickFunction()
     openUp(firstClicklocation)
-    //printBaord()
+    printBaord()
 }
 
 function getCellDomByIndex(i, j) {
@@ -155,7 +162,6 @@ function openUp(location) {
     }
 }
 
-
 function onCellClick(id) {
     if (!gGame.isOn) return
     var location = idToNums(id)
@@ -163,12 +169,10 @@ function onCellClick(id) {
     if(cell.isMarked) return
     if (cell.isMine) {
         showCell(location)
-        openAll()
+        cell.isMarked = true
         loosing()
-        // todo dead !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         return
     }
-
     if (cell.isShown) {
         var neighbors = getNeighbors(location, gBoard.length)
         var NotMarkedAround = countNotMarkedNeighbors(neighbors)
@@ -177,9 +181,8 @@ function onCellClick(id) {
                 var neighbor = gBoard[NotMarkedAround[k].i][NotMarkedAround[k].j]
                 if (neighbor.isMine) {
                     showCell(NotMarkedAround[k])
-                    openAll()
+                    cell.isMarked = true
                     loosing()
-                    // todo DEAD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11111
                     return
                 }   
             }
@@ -197,7 +200,6 @@ function onCellClick(id) {
     winning()
 }
 
-
 function countNotMarkedNeighbors(neighbors) {
     var out = []
     for (var k = 0; k < neighbors.length; ++k)
@@ -208,7 +210,6 @@ function countNotMarkedNeighbors(neighbors) {
         }
     return out
 }
-
 
 function openAll() {
     var time = 1
@@ -223,7 +224,6 @@ function openAll() {
     }
 }
 
-
 function onRightClick(e, elCell) {
     e.preventDefault()
     if (!gGame.isOn) return
@@ -231,14 +231,25 @@ function onRightClick(e, elCell) {
     if (gBoard[location.i][location.j].isShown) return
     if (gBoard[location.i][location.j].isMarked){
         gBoard[location.i][location.j].isMarked = false
-        elCell.innerHTML = EMPTY    //// TODO image mine !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        UnRenderFlag(elCell)
         gGame.markedCount--                              
     } else {
-        gBoard[location.i][location.j].isMarked = true
-        elCell.innerHTML = FLAG    //// TODO image mine !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        gBoard[location.i][location.j].isMarked = true  
+        renderFlag(elCell)
         gGame.markedCount++
     }                                   
     updateMinesOnBoardSign()
+    winning()
+}
+
+function renderFlag(elCell) {
+    elCell.innerHTML = '<img class="flag" src="imgs/flag.webp" alt="⛳"></img>'
+    var bottun = elCell.closest('.outer button')
+}
+
+function UnRenderFlag(elCell) {
+    elCell.innerHTML = EMPTY
+
 }
 
 function showCell(location) {
@@ -246,19 +257,29 @@ function showCell(location) {
     var j = location.j
     if (gBoard[i][j].isShown) return
     gBoard[i][j].isShown = true
-    gGame.shownCount += 1
     var elCell = getCellDomByIndex(i, j)
+    uncoverCellInDom(location) 
     if (gBoard[i][j].isMine) {
-        elCell.innerHTML = MINE   //// TODO image mine !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
         return
-    }
-    if (gBoard[i][j].minesAroundCount != 0) {
-        elCell.innerHTML = gBoard[i][j].minesAroundCount
-
-    }
-    // todo delete later
-    if (gBoard[i][j].minesAroundCount === 0)  elCell.innerHTML = gBoard[i][j].minesAroundCount
+    }    
+    gGame.shownCount += 1
+    gBoard[i][j].isShown = true
 }
 
 
+function uncoverCellInDom(location) {
+    var i = location.i
+    var j = location.j
+    var elCell = getCellDomByIndex(i, j)
+    var elOuter = elCell.closest('.outer')
+    if (gBoard[i][j].isMine) {
+        elCell.innerHTML = '<img class="bomb" src="imgs/bomb.png" alt="💣">'   
+        elOuter.classList.add('outerShownBobm')
+        return
+    }
+
+    elOuter.classList.add('outerShown')
+    if (gBoard[i][j].minesAroundCount != 0) {
+        elCell.innerHTML = gBoard[i][j].minesAroundCount
+    }
+}
