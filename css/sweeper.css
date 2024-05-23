@@ -14,12 +14,12 @@
   left: 0;
   right: 0;
   text-align: center;
-  margin-top: 130px;
+  margin-top: 145px;
 }
 
 :root {
   --backgroundColor: rgb(0, 0, 0);
-  --buttonColor: #37373778;
+  --buttonColor: #37373745;
   --cellSize: 50px;
   --colorGap: 10px;
   --buttonBorderRadius: 5px;
@@ -135,23 +135,23 @@ table{
 
 .outerShown{
   z-index: 20;
-  background: linear-gradient(#35ba00, #207000, #35ba00);
+  background: linear-gradient(#103800, #2a9300, #0f3400);
 }
 
 .outerShown:hover {
   z-index: 20;
-  background: linear-gradient(#35ba00, #207000, #35ba00);
+  background: linear-gradient(#103800, #2a9300, #0f3400);
   animation: none;
 }
 
 .outerShownBobm {
   z-index: 20;
-  background: red;
+  background: linear-gradient(#4a0000, #a50000, #4a0000);
 }
 
 .outerShownBobm:hover {
   z-index: 20;
-  background: red;
+  background: linear-gradient(#4a0000, #a50000, #4a0000);
   animation: none;
 }
 
@@ -202,7 +202,6 @@ table{
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   letter-spacing: 4px;
   text-transform: uppercase;
-
 }
 
 .life, .hearts {
@@ -212,16 +211,27 @@ table{
   float:left;
 }
 
+.hearts {
+  min-width: 200px;
+  min-height: 10px;
+  text-align: left;
+}
+
 .clock {
   margin-right: 50px;
+  font-size: 60px;
   display: inline;
   float:none;
 }
 
-
 .minesOnBoardSign, .minesOnBoard{
-  margin-right: 30px;
+  margin-right: 50px;
   display: inline;
   float:right;
   margin-right: 30px;
+}
+
+.heart {
+  width: 30px;
+  margin-left: 20px;
 }

@@ -51,7 +51,11 @@ function fundebug() {
 
 function updateLifeSign() {
     if (gGame.life) {
-        gGame.lifeSign.innerText = gGame.life
+        var txt = ''
+        for (var i = 0; i < gGame.life; ++i) {
+            txt += '<img class="heart" src="imgs/heart.png" alt="❤️">'
+        }
+        gGame.lifeSign.innerHTML = txt
     }
     else gGame.lifeSign.innerText = ''
 }
@@ -60,6 +64,7 @@ function loosing() {
     gGame.markedCount++
     gGame.life--
     updateLifeSign()
+    updateMinesOnBoardSign()
     if (gGame.life  > 0) return
     stopClock()
     openAll()
@@ -72,7 +77,6 @@ function stopClock() {
 
 function OnRestart()
     {
-        console.log("restert")
         if (gGame.timeInterval) stopClock()
         onInit()
     }

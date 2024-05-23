@@ -125,7 +125,7 @@ function onFirstClick(id) {
     gGame.isOn = true
     gGame.startTime = new Date()
     gGame.timeInterval = setInterval(tellTime, 1000)   
-      
+    updateLifeSign()
     updateMinesOnBoardSign()
     var firstClicklocation = idToNums(id)
     var NoMinesBlock = getNeighbors(firstClicklocation, gGame.level.size)
@@ -157,7 +157,7 @@ function openUp(location) {
     if (gBoard[i][j].minesAroundCount === 0) { 
         var neighbors = getNeighbors(location, gBoard.length)
         for (var k = 0; k < neighbors.length; ++k) {
-        setTimeout(openUp, 20, neighbors[k])
+        setTimeout(openUp, 25, neighbors[k])
         }
     }
 }
@@ -175,21 +175,21 @@ function onCellClick(id) {
     }
     if (cell.isShown) {
         var neighbors = getNeighbors(location, gBoard.length)
-        var NotMarkedAround = countNotMarkedNeighbors(neighbors)
-        if (NotMarkedAround.length === neighbors.length - cell.minesAroundCount) {
-            for (var k = 0; k < NotMarkedAround.length; ++k) {
-                var neighbor = gBoard[NotMarkedAround[k].i][NotMarkedAround[k].j]
+        var notMarkedAround = countNotMarkedNeighbors(neighbors)
+        if (notMarkedAround.length === neighbors.length - cell.minesAroundCount) {
+            for (var k = 0; k < notMarkedAround.length; ++k) {
+                var neighbor = gBoard[notMarkedAround[k].i][notMarkedAround[k].j]
                 if (neighbor.isMine) {
-                    showCell(NotMarkedAround[k])
-                    cell.isMarked = true
+                    showCell(notMarkedAround[k])
+                    gBoard[notMarkedAround[k].i][notMarkedAround[k].j].isMarked = true
                     loosing()
                     return
                 }   
             }
-            for (var k = 0; k < NotMarkedAround.length; ++k) {
-                var neighbor = gBoard[NotMarkedAround[k].i][NotMarkedAround[k].j]
+            for (var k = 0; k < notMarkedAround.length; ++k) {
+                var neighbor = gBoard[notMarkedAround[k].i][notMarkedAround[k].j]
                 if (!neighbor.isMarked) {
-                    openUp(NotMarkedAround[k])
+                    openUp(notMarkedAround[k])
                     winning()
                 }   
             }
