@@ -171,6 +171,7 @@ function onCellClick(id) {
         showCell(location)
         cell.isMarked = true
         loosing()
+        winning()
         return
     }
     if (cell.isShown) {
@@ -183,6 +184,7 @@ function onCellClick(id) {
                     showCell(notMarkedAround[k])
                     gBoard[notMarkedAround[k].i][notMarkedAround[k].j].isMarked = true
                     loosing()
+                    winning()
                     return
                 }   
             }

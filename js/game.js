@@ -1,4 +1,6 @@
 'use strict'
+const WON = 'WON'
+const LOST = 'LOST'
 var gGame
 var gLevelChoise
 function onInit(){
@@ -11,6 +13,7 @@ function onInit(){
         life: 3,
         startTime: null,
         timeInterval: null,   
+        endPicInterval: null,
         clock: document.querySelector('.clock'),
         markMinesSign: document.querySelector('.minesOnBoard'),
         lifeSign: document.querySelector('.hearts')
@@ -35,18 +38,32 @@ function updateMinesOnBoardSign() {
 function winning() {
     if (gGame.shownCount === Math.pow(gGame.level.size, 2) - gGame.level.numOfMines &&
         gGame.markedCount === gGame.level.numOfMines) {
+        setEndPic(WON)
         // player won
         var score = tellTime()
         stopClock()
         gGame.isOn = false
-        console.log(score)
-        return score
+        setEndPicInterval(WON)
     }
 }
 
-function fundebug() {
-    console.log("gGame.shownCount = " + gGame.shownCount)
-    console.log("gGame.markedCount = " + gGame.markedCount)
+function setEndPicInterval(cenario) {
+    gGame.endPicInterval = setInterval(onOffSign, 800, cenario)
+    removeEndPic()
+}
+
+function setEndPic(cenario) {
+    var endGame = document.querySelector('.endGame')
+    if (cenario === WON) {
+        endGame.innerHTML = '<img class="gameOverPic" src="imgs/crown.png">'
+        var endPic = document.querySelector('.gameOverPic')
+        endPic.style = 'margin-top: 200px;  width: 700px;'
+    }
+    if (cenario === LOST) {
+        endGame.innerHTML = '<img class="gameOverPic" src="imgs/gameover.png"></img>'
+        var endPic = document.querySelector('.gameOverPic')
+        endPic.style = 'margin-top: 300px;  height: 500;'
+    } 
 }
 
 function updateLifeSign() {
@@ -66,8 +83,10 @@ function loosing() {
     updateLifeSign()
     updateMinesOnBoardSign()
     if (gGame.life  > 0) return
+    setEndPic(LOST)
     stopClock()
     openAll()
+    setEndPicInterval(LOST)
     gGame.isOn = false
 }
 
@@ -75,8 +94,15 @@ function stopClock() {
     clearInterval(gGame.timeInterval)
 }
 
+
+function removeEndPic() {
+    var endPic = document.querySelector('.endGame')
+    endPic.innerHTML = ''
+}
+
 function OnRestart()
     {
+        clearEndPIcInterval()
         if (gGame.timeInterval) stopClock()
         onInit()
     }
@@ -90,3 +116,14 @@ function levelChoice(){
         }
 }
 
+function onOffSign(cenario) {
+    setEndPic(cenario)
+    setTimeout(removeEndPic, 400)
+}
+
+
+function clearEndPIcInterval() {
+    if (gGame.endPicInterval) {
+        clearInterval(gGame.endPicInterval)
+    }
+}

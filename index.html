@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/sweeper.css">
 </head>
 <body onload="onInit()">
+    <div class="endGame"> </div>
     <div class="restartSection">
         <div class="restart" onclick="OnRestart()">
             <img class="smiley" src="imgs/smiley.png" alt="😊"></img> restart
@@ -16,9 +17,9 @@
         <div class="levelChoise">
             <input type="radio" name="drone" value="Beginner" onclick="levelChoice()"/>
             <label for="huey">Beginner</label>
-            <input type="radio" name="drone" value="Medium" onclick="levelChoice()" />
+            <input type="radio" name="drone" value="Medium" onclick="levelChoice()" checked/>
             <label for="dewey">Medium</label>
-            <input type="radio" name="drone" value="Expert" onclick="levelChoice()" checked/>
+            <input type="radio" name="drone" value="Expert" onclick="levelChoice()" />
             <label for="louie">Expert</label>
         </div>      
     </div>
