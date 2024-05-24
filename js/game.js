@@ -26,10 +26,18 @@ function onInit(){
 
 function tellTime (){
     var endDate   = new Date()
-    var time = Math.floor((endDate.getTime() - gGame.startTime.getTime()) / 1000)
-    gGame.clock.innerText = time
+    var time = Math.floor((endDate.getTime() - gGame.startTime.getTime()) / 1000).toString()
+    var timeHTML = ''
+    for (var i = 0; i < time.length; ++i) {
+        timeHTML += `<img class="nums" src="imgs/nums/${time[i]}.png" alt="${time[i]}"></img>`
+    }
+    gGame.clock.innerHTML = timeHTML
     return time
 }
+
+
+
+
 
 function updateMinesOnBoardSign() {
     if (!gGame.isOn)  gGame.markMinesSign.innerText = ''

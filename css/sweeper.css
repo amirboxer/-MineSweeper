@@ -181,7 +181,7 @@ table{
 
 .restart {
   margin: auto;
-  margin-bottom: 25px;
+  margin-bottom: 50px;
   padding: 10px;
   font-size: 40px;
   background-clip: content-box;
@@ -196,8 +196,9 @@ table{
 }
 
 .topLine {
+  padding: 5px 0 5px;
   text-align:center;
-  margin-top: 40x;
+  margin-top: 20px;
   color: #ffffff;
   font-size: 35px;
   background: var(--buttonColor);
@@ -220,10 +221,19 @@ table{
 }
 
 .clock {
-  margin-right: 50px;
-  font-size: 55px;
-  display: inline;
-  float:none;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  width: 200px;
+  height: 90px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  color: #ffffff;
+  font-size: 45px;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
 .minesOnBoardSign, .minesOnBoard{
@@ -266,4 +276,9 @@ input[type='radio']:checked::before {
 
 label {
   padding-left: 30px;
+}
+
+.nums {
+  height: 70px;
+  padding: 0 -5px 0 - 5px;
 }
