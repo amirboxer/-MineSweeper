@@ -4,6 +4,7 @@ const LOST = 'LOST'
 var gGame
 var gLevelChoise
 function onInit(){
+    clearEndPIcInterval()
     gGame = {
         level: LEVELS[levelChoice()],
         isOn: false,
@@ -43,13 +44,8 @@ function winning() {
         var score = tellTime()
         stopClock()
         gGame.isOn = false
-        setEndPicInterval(WON)
+        gGame.endPicInterval = setInterval(onOffSign, 800, WON)
     }
-}
-
-function setEndPicInterval(cenario) {
-    gGame.endPicInterval = setInterval(onOffSign, 800, cenario)
-    removeEndPic()
 }
 
 function setEndPic(cenario) {
@@ -86,7 +82,7 @@ function loosing() {
     setEndPic(LOST)
     stopClock()
     openAll()
-    setEndPicInterval(LOST)
+    gGame.endPicInterval = setInterval(onOffSign, 800, LOST)
     gGame.isOn = false
 }
 
@@ -102,7 +98,10 @@ function removeEndPic() {
 
 function OnRestart()
     {
+        gGame.life = 0
+        updateLifeSign()
         clearEndPIcInterval()
+        removeEndPic()
         if (gGame.timeInterval) stopClock()
         onInit()
     }
@@ -123,7 +122,7 @@ function onOffSign(cenario) {
 
 
 function clearEndPIcInterval() {
-    if (gGame.endPicInterval) {
+    if (gGame && gGame.endPicInterval) {
         clearInterval(gGame.endPicInterval)
     }
 }

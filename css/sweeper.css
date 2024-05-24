@@ -14,7 +14,7 @@
   left: 0;
   right: 0;
   text-align: center;
-  margin-top: 145px;
+  margin-top: 130px;
 }
 
 :root {
@@ -156,7 +156,8 @@ table{
 }
 
 
-.restartSection {margin-top: 800px;
+.restartSection {
+  margin-top: 800px;
   z-index: 40;
   position: absolute;
   margin-left: auto;
@@ -170,7 +171,7 @@ table{
   background: var(--buttonColor);
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   color: #f2f2f2;
-  font-size: 30px;
+  font-size: 25px;
   letter-spacing: 4px;
   text-transform: uppercase;
   cursor: pointer;
@@ -180,7 +181,7 @@ table{
 
 .restart {
   margin: auto;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   padding: 10px;
   font-size: 40px;
   background-clip: content-box;
@@ -196,9 +197,9 @@ table{
 
 .topLine {
   text-align:center;
-  margin-top: 40px;
+  margin-top: 40x;
   color: #ffffff;
-  font-size: 40px;
+  font-size: 35px;
   background: var(--buttonColor);
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   letter-spacing: 4px;
@@ -220,7 +221,7 @@ table{
 
 .clock {
   margin-right: 50px;
-  font-size: 60px;
+  font-size: 55px;
   display: inline;
   float:none;
 }
