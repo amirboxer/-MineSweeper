@@ -9,6 +9,8 @@
 </head>
 <body onload="onInit()">
     <div class="endGame"> </div>
+    <button onclick="onCellClick('undo')" class="undo"><img src="imgs/undo.png" alt="UNDO" class="undoImg"></img></button>
+    
     <div class="restartSection">
         <div class="restart" onclick="OnRestart()">
             <img class="smiley" src="imgs/smiley.png" alt="😊"></img> restart
@@ -32,7 +34,7 @@
         <div class="minesOnBoard">mines left</div>
         
     </div>
-    <div class="clock"><img class="nums" src="imgs/nums/0.png" alt="1"></img></div>
+    <div class="clock"></div>
     <div class="board-container">
         <table>
             <tbody>

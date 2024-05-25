@@ -3,11 +3,23 @@ const MINE = '💣'
 const FLAG = '⛳'
 const EMPTY = ''
 const LEVELS = {Beginner: {size: 4, numOfMines: 2}, 
-                Medium: {size: 8, numOfMines: 14}, 
-                Expert: {size: 12, numOfMines: 32}}
+               Medium: {size: 8, numOfMines: 14}, 
+               Expert: {size: 12, numOfMines: 32}}
+const UNDO = 'undo'
+const UNSHOW = 'UNSHOW'
+const UNMARK = 'UNMARK'
 
 var gBoard = []
 var gLevel = LEVELS.Medium
+var gUndoLine = []
+
+
+function createUndoElement(){
+    return {
+        increaseLife: false,
+        cellsToUndo: []
+    }
+}
 
 function printBaord() {
     var out = []
@@ -27,7 +39,6 @@ function printBaord() {
 
 function createBoard(level, firstClickBlock=[{i :0, j: 0}]) {
     gBoard = []
-    // TODO   firstClickPos
     createBoardWithoutMines(level.size)
     insertMines(firstClickBlock,  level.size, level.numOfMines)
 }
@@ -123,6 +134,7 @@ function idToNums(id) {
 
 function onFirstClick(id) {
     gGame.isOn = true
+    gUndoLine = []
     gGame.startTime = new Date()
     gGame.timeInterval = setInterval(tellTime, 1000)   
     updateLifeSign()
@@ -132,6 +144,7 @@ function onFirstClick(id) {
     NoMinesBlock.push(firstClicklocation)
     createBoard(gGame.level, NoMinesBlock)
     replaceOnClickFunction()
+    gUndoLine.push(createUndoElement())
     openUp(firstClicklocation)
     printBaord()
 }
@@ -149,11 +162,14 @@ function replaceOnClickFunction() {
     }
 }
 
+// AKA full expand
 function openUp(location) {
-    var i = location.i
+    var i = location.i   
     var j = location.j
     if (gBoard[i][j].isMine || gBoard[i][j].isShown || gBoard[i][j].isMarked) return
     showCell(location)
+    var undoEl = gUndoLine[gUndoLine.length - 1]
+    undoEl.cellsToUndo.push({location: location, actionNeeded: UNSHOW})
     if (gBoard[i][j].minesAroundCount === 0) { 
         var neighbors = getNeighbors(location, gBoard.length)
         for (var k = 0; k < neighbors.length; ++k) {
@@ -162,32 +178,87 @@ function openUp(location) {
     }
 }
 
+function undoMove(){
+    var undoTurn = gUndoLine.pop() 
+    if (!undoTurn) return
+    if (undoTurn.increaseLife) {
+        gGame.life++
+        updateLifeSign()
+    }
+    for (var i = 0; i < undoTurn.cellsToUndo.length; ++i) {
+        var cellLoc = undoTurn.cellsToUndo[i].location
+        var act = undoTurn.cellsToUndo[i].actionNeeded
+        switch(act) {
+            case UNSHOW:
+                unshow(cellLoc)
+                break;
+            case UNMARK:
+                onRightClick(null, getCellDomByIndex(cellLoc.i, cellLoc.j), false)
+                break;
+            }
+    }
+}
+
 function onCellClick(id) {
     if (!gGame.isOn) return
+
+    // check if undo was clicked
+    if (id === UNDO) {  
+        undoMove()
+        return
+    }
+
+    // add turn to previous turns to keep track for undo 
+    gUndoLine.push(createUndoElement())
+    var undoEl = gUndoLine[gUndoLine.length - 1]
+
+    // start check what cell was hit here
     var location = idToNums(id)
     var cell = gBoard[location.i][location.j]
+
+    // marked cell no reaction
     if(cell.isMarked) return
+
+    // mine was clicked
     if (cell.isMine) {
         showCell(location)
-        cell.isMarked = true
+        cell.isMarked = true  
+
+        // keep track for undo operation
+        undoEl.increaseLife = true
+        undoEl.cellsToUndo.push({location: location, actionNeeded: UNSHOW})
+
+        //check if lost or won
         loosing()
         winning()
         return
     }
-    if (cell.isShown) {
+
+    // an open cell was clicked
+    if (cell.isShown) { 
         var neighbors = getNeighbors(location, gBoard.length)
         var notMarkedAround = countNotMarkedNeighbors(neighbors)
         if (notMarkedAround.length === neighbors.length - cell.minesAroundCount) {
             for (var k = 0; k < notMarkedAround.length; ++k) {
                 var neighbor = gBoard[notMarkedAround[k].i][notMarkedAround[k].j]
+
+                // user marked a regular cell as a mine and tried to open a mine
                 if (neighbor.isMine) {
                     showCell(notMarkedAround[k])
                     gBoard[notMarkedAround[k].i][notMarkedAround[k].j].isMarked = true
+
+                    // keep track for undo operation
+                    undoEl.increaseLife = true
+                    undoEl.cellsToUndo.push({location: location, actionNeeded: UNSHOW})
+
+                    //check if lost or won
                     loosing()
                     winning()
                     return
                 }   
             }
+
+            // user correctly marked all the mines around the cell
             for (var k = 0; k < notMarkedAround.length; ++k) {
                 var neighbor = gBoard[notMarkedAround[k].i][notMarkedAround[k].j]
                 if (!neighbor.isMarked) {
@@ -198,6 +269,7 @@ function onCellClick(id) {
         }
         return
     }
+    // user clicked a non-mine cell
     openUp(location)
     winning()
 }
@@ -226,21 +298,26 @@ function openAll() {
     }
 }
 
-function onRightClick(e, elCell) {
-    e.preventDefault()
+function onRightClick(e, elCell, trackForUndo=true) {
+    if (e) e.preventDefault()
     if (!gGame.isOn) return
     var location = idToNums(elCell.id)
     if (gBoard[location.i][location.j].isShown) return
     if (gBoard[location.i][location.j].isMarked){
         gBoard[location.i][location.j].isMarked = false
         UnRenderFlag(elCell)
-        gGame.markedCount--                              
+        gGame.markedCount--                             
     } else {
         gBoard[location.i][location.j].isMarked = true  
         renderFlag(elCell)
         gGame.markedCount++
-    }                                   
-    updateMinesOnBoardSign()
+    }
+    if (trackForUndo){
+        gUndoLine.push(createUndoElement())
+        var undoEl = gUndoLine[gUndoLine.length - 1]
+        undoEl.cellsToUndo.push({location: location, actionNeeded: UNMARK})                                   
+    }   
+    updateMinesOnBoardSign()   
     winning()
 }
 
@@ -251,7 +328,6 @@ function renderFlag(elCell) {
 
 function UnRenderFlag(elCell) {
     elCell.innerHTML = EMPTY
-
 }
 
 function showCell(location) {
@@ -268,6 +344,20 @@ function showCell(location) {
     gBoard[i][j].isShown = true
 }
 
+function unshow(loc) {
+    var i = loc.i
+    var j = loc.j
+    if (!gBoard[i][j].isShown) return
+    gBoard[i][j].isShown = false
+    gBoard[i][j].isMarked = false
+    var elCell = getCellDomByIndex(i, j)
+    var elOuter = elCell.closest('.outer')
+    elOuter.classList.remove('outerShownBobm', 'outerShown')
+    elCell.innerHTML = EMPTY
+    if (!gBoard[i][j].isMine) {
+        gGame.shownCount -= 1
+    }   
+}
 
 function uncoverCellInDom(location) {
     var i = location.i

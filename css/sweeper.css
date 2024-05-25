@@ -272,13 +272,32 @@ input[type='radio']::before,  input[type='radio']:checked::before{
 
 input[type='radio']:checked::before {
   background-color: #eaff00;
+  top: 126px;
+  width: 50px;
+  height: 50px;
 }
 
 label {
-  padding-left: 30px;
+  padding-left: 35px;
 }
 
 .nums {
   height: 70px;
   padding: 0 -5px 0 - 5px;
+}
+
+.undo {
+  z-index: 50;
+  width: 200px;
+  transform: rotate(-30deg);
+  position: absolute;
+  top: 150px;
+  left: calc(0% + 50px);
+  cursor: pointer;
+  background: none;
+}
+
+.undoImg {
+  z-index: 49;
+  width: 200px;
 }

@@ -35,10 +35,6 @@ function tellTime (){
     return time
 }
 
-
-
-
-
 function updateMinesOnBoardSign() {
     if (!gGame.isOn)  gGame.markMinesSign.innerText = ''
     else gGame.markMinesSign.innerText  = gGame.level.numOfMines - gGame.markedCount
@@ -48,8 +44,8 @@ function winning() {
     if (gGame.shownCount === Math.pow(gGame.level.size, 2) - gGame.level.numOfMines &&
         gGame.markedCount === gGame.level.numOfMines) {
         setEndPic(WON)
-        // player won
         var score = tellTime()
+        setEndPic(WON)
         stopClock()
         gGame.isOn = false
         gGame.endPicInterval = setInterval(onOffSign, 800, WON)
