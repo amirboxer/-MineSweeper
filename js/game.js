@@ -4,7 +4,6 @@ const LOST = 'LOST'
 var gGame
 var gLevelChoise
 function onInit(){
-    clearEndPIcInterval()
     gGame = {
         level: LEVELS[levelChoice()],
         isOn: false,
@@ -15,11 +14,13 @@ function onInit(){
         startTime: null,
         timeInterval: null,   
         endPicInterval: null,
+        endPicDisplay: false,
         clock: document.querySelector('.clock'),
         markMinesSign: document.querySelector('.minesOnBoard'),
         lifeSign: document.querySelector('.hearts'),
         endPic: document.querySelector('.gameOverPic')
-       }
+    }
+    removeEndPic()
     gGame.clock.innerText = ''
     updateMinesOnBoardSign()
     rederBoard(gGame.level.size)
@@ -57,7 +58,7 @@ function winning() {
         stopClock()
         var score = tellTime()
         gGame.isOn = false
-        gGame.endPicInterval = setInterval(onOffSign, 800, WON)
+        gGame.endPicInterval = setInterval(onOffSign, 800)
     }
 }
 
@@ -70,8 +71,8 @@ function loosing() {
     setEndPic(LOST)
     stopClock()
     openAll()
-    gGame.endPicInterval = setInterval(onOffSign, 800)
     gGame.isOn = false
+    gGame.endPicInterval = setInterval(onOffSign, 800)
 }
 
 function setEndPic(cenario) {
