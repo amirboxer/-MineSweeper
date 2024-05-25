@@ -188,8 +188,14 @@ table{
   border: 10px solid var(--buttonColor);
   bottom: 20px;
   width: 300px;
-
+  box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
 }
+
+.restart:active {
+  color:green;
+  box-shadow: 0 0 5px -1px rgba(0,0,0,0.6);
+}
+
 
 .smiley {
   width: 35px
@@ -250,6 +256,8 @@ table{
 
 .gameOverPic {  
   text-align: center;
+  margin-top: 300px;
+  display: none;
 }
 
 .endGame {
@@ -298,6 +306,9 @@ label {
 }
 
 .undoImg {
-  z-index: 49;
   width: 200px;
+}
+
+.undo:active {
+  background-color:green;
 }

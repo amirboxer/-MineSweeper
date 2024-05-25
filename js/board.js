@@ -291,7 +291,7 @@ function openAll() {
         for (var j = 0; j < gBoard.length; ++j)
             {
                 if (!gBoard[i][j].isMarked && !gBoard[i][j].isShown) {
-                    setTimeout(showCell, 15 * time,{i: i, j: j})
+                    setTimeout(showCell, 8 * time,{i: i, j: j})
                     time++
                 }
             }

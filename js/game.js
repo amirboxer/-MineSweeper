@@ -17,12 +17,14 @@ function onInit(){
         endPicInterval: null,
         clock: document.querySelector('.clock'),
         markMinesSign: document.querySelector('.minesOnBoard'),
-        lifeSign: document.querySelector('.hearts')
+        lifeSign: document.querySelector('.hearts'),
+        endPic: document.querySelector('.gameOverPic')
        }
     gGame.clock.innerText = ''
     updateMinesOnBoardSign()
     rederBoard(gGame.level.size)
 }
+
 
 function tellTime (){
     var endDate   = new Date()
@@ -35,6 +37,14 @@ function tellTime (){
     return time
 }
 
+function OnRestart(){
+    gGame.life = 0
+    updateLifeSign()
+    clearEndPIcInterval()
+    if (gGame.timeInterval) stopClock()
+    setTimeout(onInit, 300)
+}
+
 function updateMinesOnBoardSign() {
     if (!gGame.isOn)  gGame.markMinesSign.innerText = ''
     else gGame.markMinesSign.innerText  = gGame.level.numOfMines - gGame.markedCount
@@ -42,28 +52,51 @@ function updateMinesOnBoardSign() {
 
 function winning() {
     if (gGame.shownCount === Math.pow(gGame.level.size, 2) - gGame.level.numOfMines &&
-        gGame.markedCount === gGame.level.numOfMines) {
-        setEndPic(WON)
-        var score = tellTime()
+    gGame.markedCount === gGame.level.numOfMines) {
         setEndPic(WON)
         stopClock()
+        var score = tellTime()
         gGame.isOn = false
         gGame.endPicInterval = setInterval(onOffSign, 800, WON)
     }
 }
 
+function loosing() {
+    gGame.markedCount++
+    gGame.life--
+    updateLifeSign()
+    updateMinesOnBoardSign()
+    if (gGame.life  > 0) return
+    setEndPic(LOST)
+    stopClock()
+    openAll()
+    gGame.endPicInterval = setInterval(onOffSign, 800)
+    gGame.isOn = false
+}
+
 function setEndPic(cenario) {
-    var endGame = document.querySelector('.endGame')
     if (cenario === WON) {
-        endGame.innerHTML = '<img class="gameOverPic" src="imgs/crown.png">'
-        var endPic = document.querySelector('.gameOverPic')
-        endPic.style = 'margin-top: 200px;  width: 700px;'
+        gGame.endPic.src = 'imgs/crown.png'
     }
     if (cenario === LOST) {
-        endGame.innerHTML = '<img class="gameOverPic" src="imgs/gameover.png"></img>'
-        var endPic = document.querySelector('.gameOverPic')
-        endPic.style = 'margin-top: 300px;  height: 500;'
+        gGame.endPic.src = 'imgs/gameover.png'
     } 
+    gGame.endPic.style = 'display: block'
+}
+
+function removeEndPic() {
+    gGame.endPic.style = 'display: none'
+}
+
+function onOffSign() {
+    gGame.endPic.style = 'display: block'
+    setTimeout(removeEndPic, 400)
+}
+
+function clearEndPIcInterval() {
+    if (gGame && gGame.endPicInterval) {
+        clearInterval(gGame.endPicInterval)
+    }
 }
 
 function updateLifeSign() {
@@ -77,39 +110,10 @@ function updateLifeSign() {
     else gGame.lifeSign.innerText = ''
 }
 
-function loosing() {
-    gGame.markedCount++
-    gGame.life--
-    updateLifeSign()
-    updateMinesOnBoardSign()
-    if (gGame.life  > 0) return
-    setEndPic(LOST)
-    stopClock()
-    openAll()
-    gGame.endPicInterval = setInterval(onOffSign, 800, LOST)
-    gGame.isOn = false
-}
 
 function stopClock() {
     clearInterval(gGame.timeInterval)
 }
-
-
-function removeEndPic() {
-    var endPic = document.querySelector('.endGame')
-    endPic.innerHTML = ''
-}
-
-function OnRestart()
-    {
-        gGame.life = 0
-        updateLifeSign()
-        clearEndPIcInterval()
-        removeEndPic()
-        if (gGame.timeInterval) stopClock()
-        onInit()
-    }
-
 
 function levelChoice(){
     var selections = document.querySelectorAll('input')
@@ -117,16 +121,4 @@ function levelChoice(){
         if (selections[i].checked) {
             return selections[i].value
         }
-}
-
-function onOffSign(cenario) {
-    setEndPic(cenario)
-    setTimeout(removeEndPic, 400)
-}
-
-
-function clearEndPIcInterval() {
-    if (gGame && gGame.endPicInterval) {
-        clearInterval(gGame.endPicInterval)
-    }
 }
