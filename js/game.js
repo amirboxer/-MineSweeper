@@ -20,7 +20,6 @@ function onInit(){
         lifeSign: document.querySelector('.hearts'),
         endPic: document.querySelector('.gameOverPic')
     }
-    removeEndPic()
     gGame.clock.innerText = ''
     updateMinesOnBoardSign()
     rederBoard(gGame.level.size)
@@ -55,8 +54,9 @@ function winning() {
     if (gGame.shownCount === Math.pow(gGame.level.size, 2) - gGame.level.numOfMines &&
     gGame.markedCount === gGame.level.numOfMines) {
         setEndPic(WON)
+        setTimeout(() => gGame.endPic.style = 'display: none', 400)
         stopClock()
-        var score = tellTime()
+        tellTime()
         gGame.isOn = false
         gGame.endPicInterval = setInterval(onOffSign, 800)
     }
@@ -69,6 +69,7 @@ function loosing() {
     updateMinesOnBoardSign()
     if (gGame.life  > 0) return
     setEndPic(LOST)
+    setTimeout(() => gGame.endPic.style = 'display: none', 400)
     stopClock()
     openAll()
     gGame.isOn = false
@@ -85,13 +86,9 @@ function setEndPic(cenario) {
     gGame.endPic.style = 'display: block'
 }
 
-function removeEndPic() {
-    gGame.endPic.style = 'display: none'
-}
-
 function onOffSign() {
     gGame.endPic.style = 'display: block'
-    setTimeout(removeEndPic, 400)
+    setTimeout(() => gGame.endPic.style = 'display: none', 400)
 }
 
 function clearEndPIcInterval() {
